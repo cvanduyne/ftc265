@@ -122,7 +122,10 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
 
 extern "C" JNIEXPORT jlong JNICALL
 Java_com_spartronics4915_lib_T265Camera_newCamera(JNIEnv *env, jobject thisObj,
-                                                  jstring mapPath) {
+                                                  jstring mapPath,
+                                                  jboolean enableMapping,
+                                                  jboolean enablePoseJumping,
+                                                  jboolean enableRelocalization) {
   // This locking scheme is very conservative. This is important. When the T265
   // is attached from a cold boot, it will first present as a Movidius device,
   // which is handled on the Java end and ultimately gets passed to this code to
@@ -176,6 +179,11 @@ Java_com_spartronics4915_lib_T265Camera_newCamera(JNIEnv *env, jobject thisObj,
         pose = new rs2::pose_sensor(sensor);
       if (sensor.is<rs2::pose_sensor>())
         odom = new rs2::wheel_odometer(sensor);
+
+      sensor.set_option(RS2_OPTION_ENABLE_MAPPING, enableMapping ? 1 : 0 );
+      sensor.set_option(RS2_OPTION_ENABLE_POSE_JUMPING , enablePoseJumping ? 1 : 0 );
+      sensor.set_option(RS2_OPTION_ENABLE_RELOCALIZATION, enableRelocalization ? 1 : 0 );
+
     }
     if (!odom)
       throw std::runtime_error(

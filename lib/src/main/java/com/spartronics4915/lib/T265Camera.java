@@ -98,8 +98,11 @@ public class T265Camera {
      * @param odometryCovariance Covariance of the odometry input when doing sensor fusion (you
      *     probably want to tune this).
      */
-    public T265Camera(Transform2d robotOffset, double odometryCovariance, Context appContext) {
-        this(robotOffset, odometryCovariance, "", appContext);
+    public T265Camera(Transform2d robotOffset, double odometryCovariance, Context appContext,
+                      boolean enableMapping,
+                      boolean enablePoseJumping,
+                      boolean enableRelocalization) {
+        this(robotOffset, odometryCovariance, "", appContext, enableMapping, enablePoseJumping, enableRelocalization);
     }
 
     /**
@@ -116,7 +119,10 @@ public class T265Camera {
             Transform2d robotOffsetMeters,
             double odometryCovariance,
             String relocMapPath,
-            Context appContext) {
+            Context appContext,
+            boolean enableMapping, // Default true
+            boolean enablePoseJumping, // Default false
+            boolean enableRelocalization) { // Default true
         if (mLinkError != null) {
             throw mLinkError;
         }
@@ -139,7 +145,10 @@ public class T265Camera {
                                     kLogTag,
                                     "onDeviceAttached called... Will attempt to handoff to native code.");
 
-                            long ptr = newCamera(relocMapPath);
+                            long ptr = newCamera(relocMapPath,
+                                    enableMapping,
+                                    enablePoseJumping,
+                                    enableRelocalization);
                             synchronized (mPointerMutex) {
                                 // newCamera is hoisted out to before we lock because it can block
                                 // for a while
@@ -345,7 +354,10 @@ public class T265Camera {
 
     private native void sendOdometryRaw(int sensorIndex, float xVel, float yVel);
 
-    private native long newCamera(String mapPath);
+    private native long newCamera(String mapPath,
+                                  boolean enableMapping,
+                                  boolean enablePoseJumping,
+                                  boolean enableRelocalization);
 
     private static native void cleanup();
 

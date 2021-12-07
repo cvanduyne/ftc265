@@ -64,7 +64,10 @@ JNIEXPORT void JNICALL Java_com_spartronics4915_lib_T265Camera_sendOdometryRaw(
  * Signature: (Ljava/lang/String;)J
  */
 JNIEXPORT jlong JNICALL
-Java_com_spartronics4915_lib_T265Camera_newCamera(JNIEnv *, jobject, jstring);
+Java_com_spartronics4915_lib_T265Camera_newCamera(JNIEnv *, jobject, jstring,
+        jboolean,
+        jboolean,
+        jboolean);
 
 /*
  * Class:     com_spartronics4915_lib_T265Camera
