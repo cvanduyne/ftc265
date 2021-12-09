@@ -17,6 +17,7 @@ lib/src/main/jniLibs/
 # Built application files
 *.apk
 *.aar
+!librealsense-2*.aar
 *.ap_
 *.aab
 
